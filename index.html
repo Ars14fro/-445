@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0a0a12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Узнай друг друга">
+  <meta name="description" content="Романтическая игра в вопросы для двоих">
+  <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22%D0%A3%D0%B7%D0%BD%D0%B0%D0%B9%20%D0%B4%D1%80%D1%83%D0%B3%20%D0%B4%D1%80%D1%83%D0%B3%D0%B0%22%2C%22short_name%22%3A%22%D0%A3%D0%B7%D0%BD%D0%B0%D0%B9%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230a0a12%22%2C%22theme_color%22%3A%22%230a0a12%22%2C%22start_url%22%3A%22.%2F%22%2C%22lang%22%3A%22ru%22%7D">
+  <title>Узнай друг друга</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="bg-layer" class="bg-layer"></div>
+  <div class="bg-overlay"></div>
+
+  <div id="couple-avatar" class="couple-avatar hidden">
+    <img id="couple-avatar-img" src="" alt="Наше фото">
+  </div>
+
+  <button id="btn-magniy" class="btn-magniy btn-press" aria-label="Магний">💊</button>
+
+  <main id="app">
+    <!-- Стартовый экран -->
+    <section id="screen-start" class="screen screen-active">
+      <div class="glass-card fade-up">
+        <h1 class="title">Узнай друг друга</h1>
+        <p class="subtitle">50 вопросов, ноль скучных вечеров и одна таблетка магния</p>
+
+        <div id="start-photo-block" class="start-photo-block">
+          <div id="start-photo-preview" class="start-photo-preview hidden">
+            <img id="start-photo-img" src="" alt="Наше первое фото">
+          </div>
+          <button id="btn-take-photo" class="btn btn-photo btn-press">Сделать наше фото</button>
+          <button id="btn-retake-photo" class="btn btn-secondary btn-press hidden">Переснять</button>
+        </div>
+
+        <button id="btn-start" class="btn btn-primary btn-press">Погнали</button>
+      </div>
+    </section>
+
+    <!-- Игровой экран -->
+    <section id="screen-game" class="screen">
+      <div id="question-card" class="glass-card question-card">
+        <div class="question-counter" id="question-counter">1 / 50</div>
+        <div id="question-image-wrap" class="question-image-wrap hidden">
+          <img id="question-image" class="question-image" src="" alt="">
+        </div>
+        <p id="question-text" class="question-text"></p>
+      </div>
+
+      <div id="actions-text" class="actions">
+        <button id="btn-next" class="btn btn-primary btn-press">Дальше</button>
+        <button id="btn-skip" class="btn btn-secondary btn-press">Скипнуть (Сложно)</button>
+      </div>
+
+      <div id="actions-choice" class="actions hidden">
+        <button id="btn-choice-a" class="btn btn-choice btn-press"></button>
+        <button id="btn-choice-b" class="btn btn-choice btn-press"></button>
+        <button id="btn-skip-choice" class="btn btn-secondary btn-press">Скипнуть (Сложно)</button>
+      </div>
+    </section>
+
+    <!-- Финальный экран -->
+    <section id="screen-final" class="screen screen-final">
+      <div class="final-content fade-up">
+        <h2 class="final-title">Игра окончена</h2>
+        <p class="final-subtitle">Вы прошли все 50 вопросов. Красавчики.</p>
+        <button id="btn-arseniy" class="btn btn-final btn-press">все Арсений устал (посмотреть)</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Оверлей: картинка (пункт 3, чиназес, ковбой) -->
+  <div id="overlay-image" class="overlay hidden">
+    <div class="overlay-backdrop"></div>
+    <div class="overlay-content overlay-image-content">
+      <img id="overlay-img" src="" alt="">
+      <p id="overlay-caption" class="overlay-caption hidden"></p>
+      <button id="overlay-image-close" class="btn btn-overlay btn-press">Продолжить</button>
+    </div>
+  </div>
+
+  <!-- Оверлей: видео (подмиг) -->
+  <div id="overlay-video" class="overlay hidden">
+    <div class="overlay-backdrop"></div>
+    <div class="overlay-content overlay-video-content">
+      <video id="overlay-vid" playsinline></video>
+      <button id="overlay-video-close" class="btn btn-overlay btn-press">Продолжить</button>
+    </div>
+  </div>
+
+  <!-- Модал: 3 скипа -->
+  <div id="modal-skip" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="glass-card modal-card fade-up">
+      <p class="modal-text">Эй, харе скипать! Вы сюда пришли друг друга узнавать</p>
+      <button id="modal-skip-close" class="btn btn-primary btn-press">Ладно, ладно...</button>
+    </div>
+  </div>
+
+  <!-- Финальное фото lana -->
+  <div id="overlay-lana" class="overlay overlay-lana hidden">
+    <img id="lana-img" src="lana.jpg" alt="Lana">
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden">
+    <span>Пульс снижен, продолжаем!</span>
+  </div>
+
+  <!-- Падающие таблетки -->
+  <div id="pill-rain" class="pill-rain"></div>
+
+  <!-- Камера -->
+  <div id="screen-camera" class="screen-camera hidden">
+    <div class="camera-viewfinder">
+      <video id="camera-video" autoplay playsinline muted></video>
+      <div class="camera-pink-filter"></div>
+    </div>
+    <p class="camera-hint">Розовый фильтр — так и будет на фото</p>
+    <div class="camera-actions">
+      <button id="btn-camera-cancel" class="btn btn-secondary btn-press">Отмена</button>
+      <button id="btn-camera-capture" class="btn btn-capture btn-press" aria-label="Снять">📸</button>
+    </div>
+  </div>
+
+  <div id="screen-camera-preview" class="screen-camera screen-camera-preview hidden">
+    <div class="camera-preview-wrap">
+      <img id="camera-preview-img" src="" alt="Превью">
+    </div>
+    <div class="camera-actions">
+      <button id="btn-camera-retake" class="btn btn-secondary btn-press">Переснять</button>
+      <button id="btn-camera-save" class="btn btn-primary btn-press">Сохранить</button>
+    </div>
+  </div>
+
+  <canvas id="camera-canvas" class="hidden"></canvas>
+
+  <!-- Аудио -->
+  <audio id="audio-bg" src="bg.mp3" loop preload="auto"></audio>
+  <audio id="audio-click" src="click.mp3" preload="auto"></audio>
+  <audio id="audio-skip" src="skip.mp3" preload="auto"></audio>
+  <audio id="audio-magniy" src="magniy.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
